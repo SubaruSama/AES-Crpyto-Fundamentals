@@ -1,15 +1,26 @@
-'''
-    Ate agora estou apenas trabalhando com strings. Preciso encriptar o arquivo.
-    Pequisar como se cria um arquivo com python e encriptar o que eu criei.
-    Ref: pyaes, doc python create file
-    Criar uma funcao que limpa a tela (quase feita, so precisa encapsular ela)
-    Criar uma funcao que faz o caminho inverso, que desencripta 
-'''
+﻿# coding = UTF-8
+
 import os
 import os.path as path
 import pyaes
 import time
 
+
+def hello():
+   print u''' 
+ █████╗ ███████╗███████╗
+██╔══██╗██╔════╝██╔════╝
+███████║█████╗  ███████╗
+██╔══██║██╔══╝  ╚════██║
+██║  ██║███████╗███████║
+╚═╝  ╚═╝╚══════╝╚══════╝
+
+ ██████╗██████╗  ██████╗     █████╗ ███╗   ██╗██████╗     ███████╗ ██████╗██████╗ 
+██╔════╝██╔══██╗██╔════╝    ██╔══██╗████╗  ██║██╔══██╗    ██╔════╝██╔════╝██╔══██╗
+██║     ██████╔╝██║         ███████║██╔██╗ ██║██║  ██║    █████╗  ██║     ██████╔╝
+██║     ██╔══██╗██║         ██╔══██║██║╚██╗██║██║  ██║    ██╔══╝  ██║     ██╔══██╗
+╚██████╗██████╔╝╚██████╗    ██║  ██║██║ ╚████║██████╔╝    ███████╗╚██████╗██████╔╝
+ ╚═════╝╚═════╝  ╚═════╝    ╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝     ╚══════╝ ╚═════╝╚═════╝  '''
 
 def clear():
     if os.name == 'nt':
@@ -549,6 +560,7 @@ def aes_cbc_256():
 
 # escolha do modo de operacao
 clear()
+hello()
 print("Usando o algoritmo AES com dois modos: ECB e CBC. Por favor, escolha um:\n1 - Modo ECB\n2 - Modo CBC")
 modo_operacao = int(raw_input("Entre com a sua escolha: "))
 

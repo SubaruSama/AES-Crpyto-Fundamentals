@@ -3,4 +3,7 @@ Program to encrypt the data on a text file with AES with two modes: CBC and ECB 
 
 # TODO
 Do a command line interface (maybe using ArgParser? Let's see)
+
 Make this program to encrypt file and not only data inside the text file
+
+Maybe a GUI? (I suck at GUI :/)

@@ -4,23 +4,24 @@ import os
 import os.path as path
 import pyaes
 import time
+from Crypto.PublicKey import RSA # TODO: Implementar o RSA
 
 
 def hello():
    print u''' 
- █████╗ ███████╗███████╗
-██╔══██╗██╔════╝██╔════╝
-███████║█████╗  ███████╗
-██╔══██║██╔══╝  ╚════██║
-██║  ██║███████╗███████║
-╚═╝  ╚═╝╚══════╝╚══════╝
-
- ██████╗██████╗  ██████╗     █████╗ ███╗   ██╗██████╗     ███████╗ ██████╗██████╗ 
-██╔════╝██╔══██╗██╔════╝    ██╔══██╗████╗  ██║██╔══██╗    ██╔════╝██╔════╝██╔══██╗
-██║     ██████╔╝██║         ███████║██╔██╗ ██║██║  ██║    █████╗  ██║     ██████╔╝
-██║     ██╔══██╗██║         ██╔══██║██║╚██╗██║██║  ██║    ██╔══╝  ██║     ██╔══██╗
-╚██████╗██████╔╝╚██████╗    ██║  ██║██║ ╚████║██████╔╝    ███████╗╚██████╗██████╔╝
- ╚═════╝╚═════╝  ╚═════╝    ╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝     ╚══════╝ ╚═════╝╚═════╝  '''
+ █████╗ ███████╗███████╗     ██████╗██████╗  ██████╗       ███████╗ ██████╗██████╗ 
+██╔══██╗██╔════╝██╔════╝    ██╔════╝██╔══██╗██╔════╝       ██╔════╝██╔════╝██╔══██╗
+███████║█████╗  ███████╗    ██║     ██████╔╝██║            █████╗  ██║     ██████╔╝
+██╔══██║██╔══╝  ╚════██║    ██║     ██╔══██╗██║            ██╔══╝  ██║     ██╔══██╗
+██║  ██║███████╗███████║    ╚██████╗██████╔╝╚██████╗▄█╗    ███████╗╚██████╗██████╔╝
+╚═╝  ╚═╝╚══════╝╚══════╝     ╚═════╝╚═════╝  ╚═════╝╚═╝    ╚══════╝ ╚═════╝╚═════╝ 
+                                                                                   
+ █████╗ ███╗   ██╗██████╗     ██████╗ ███████╗ █████╗                              
+██╔══██╗████╗  ██║██╔══██╗    ██╔══██╗██╔════╝██╔══██╗                             
+███████║██╔██╗ ██║██║  ██║    ██████╔╝███████╗███████║                             
+██╔══██║██║╚██╗██║██║  ██║    ██╔══██╗╚════██║██╔══██║                             
+██║  ██║██║ ╚████║██████╔╝    ██║  ██║███████║██║  ██║                             
+╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝     ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝'''
 
 def clear():
     if os.name == 'nt':
@@ -56,15 +57,18 @@ def aes_ecb():
     else:
 
         print("Wat... Alguma coisa deu errado :<")
+        aes_ecb()
 
 
 def aes_ecb_128():
 
+    # Function to encrypt with AES in mode ECB with key size 128 bits
     print("Bem vindo ao modulo de criptografia com o algoritmo AES no modo ECB 128 bits")
+    # Encrypt or Decrypt?
     print("O modulo possui duas opcoes:\n1 - Criptografar\n2 - Decritpografar")
-    crypt_or_decrypt = int(raw_input(">> ")) 
+    crypt_or_decrypt = int(raw_input(">> "))
 
-    if crypt_or_decrypt == 1: # Criptografando os dados
+    if crypt_or_decrypt == 1: # Encrypt data
 
         clear()
         print("Funcao que ira tratar o AES no modo ECB com o tamanho da chave 128 bits")
@@ -74,13 +78,13 @@ def aes_ecb_128():
 
         if conferindo_text < 16:
 
-            print("Plaintext precisa de mais caracteres")
+            print("Plaintext precisa de mais caracteres. O texto possui: {} letras".format(len(conferindo_text)))
             time.sleep(2)
             aes_ecb_128()
 
         elif conferindo_text > 16:
 
-            print("Plaintext precisa de menos caracteres")
+            print("Plaintext precisa de menos caracteres. O texto possui: {} letras".format(len(conferindo_text)))
             time.sleep(2)
             aes_ecb_128()
 
@@ -101,7 +105,6 @@ def aes_ecb_128():
             aes_exec = pyaes.AESModeOfOperationECB(key_gerada)
             ciphertext = aes_exec.encrypt(plaintext)
             # Escrever no arquivo o ciphertext
-            # file_in.write("{}\n".format(ciphertext.encode('hex')))
             file_in.write("{}".format(ciphertext))
             file_in_hex.write("{}".format(ciphertext.encode('hex')))
             file_in.close()
@@ -116,12 +119,12 @@ def aes_ecb_128():
 
             if conferindo_chave < 16:
 
-                print("Coloque mais caracteres para fechar 16 bytes")
+                print("Coloque mais caracteres para fechar 16 bytes. A chave possui {} caracteres".format(len(conferindo_chave)))
                 aes_ecb_128()
 
             elif conferindo_chave > 16:
 
-                print("Retire mais caracteres para fechar 16 bytes")
+                print("Retire mais caracteres para fechar 16 bytes. A chave possui {} caracteres".format(len(conferindo_chave)))
                 aes_ecb_128()
 
             else:
@@ -129,8 +132,8 @@ def aes_ecb_128():
                 aes_exec = pyaes.AESModeOfOperationECB(key_user)
                 ciphertext = aes_exec.encrypt(plaintext)
                 # file_in.write("{}\n".format(ciphertext.encode('hex')))
-                file_in.write("{}".format(ciphertext))
-                file_in_hex.write("{}".format(ciphertext.encode('hex')))
+                file_in.write("{}".format(ciphertext)) # Writing in ascii mode
+                file_in_hex.write("{}".format(ciphertext.encode('hex'))) # Writing in hex mode in a file
                 file_in.close()
                 file_in_hex.close()
 
@@ -148,12 +151,17 @@ def aes_ecb_128():
             print(conteudo)
 
             try:
+
                 key = raw_input("Digite a chave: ")
                 key = key.decode('hex')
+
             except ValueError:
+
                 print("Tamanho da chave nao e 16 bytes")
                 aes_ecb_128()
+
             except TypeError:
+
                 print("Chave tem que ser em hexadecimal\n")
                 aes_ecb_128()
 
@@ -166,6 +174,7 @@ def aes_ecb_128():
             plaintext_arquivo.close()
 
         else:
+
             print("Arquivo inexistente")
             aes_ecb_128()
 
@@ -173,10 +182,11 @@ def aes_ecb_128():
 
 def aes_ecb_256():
     print("Bem vindo ao modulo de criptografia com o algoritmo AES no modo ECB 256 bits")
+    # Encrypt or Decrypt?
     print("O modulo possui duas opcoes:\n1 - Criptografar\n2 - Decritpografar")
     crypt_or_decrypt = int(raw_input(">> ")) 
 
-    if crypt_or_decrypt == 1: # Criptografando os dados
+    if crypt_or_decrypt == 1: # Encrypting data
 
         clear()
         print("Funcao que ira tratar o AES no modo ECB com o tamanho da chave 256 bits")
@@ -186,13 +196,13 @@ def aes_ecb_256():
 
         if conferindo_text < 16:
 
-            print("Plaintext precisa de mais caracteres")
+            print("Plaintext precisa de mais caracteres. O texto possui {} caracteres".format(len(conferindo_text)))
             time.sleep(2)
             aes_ecb_256()
 
         elif conferindo_text > 16:
 
-            print("Plaintext precisa de menos caracteres")
+            print("Plaintext precisa de menos caracteres. O texto possui {} caracteres".format(len(conferindo_text)))
             time.sleep(2)
             aes_ecb_256()
 
@@ -228,12 +238,12 @@ def aes_ecb_256():
 
             if conferindo_chave < 32:
 
-                print("Coloque mais caracteres para fechar 32 bytes")
+                print("Coloque mais caracteres para fechar 32 bytes. A chave possui {} caracteres".format(len(conferindo_chave)))
                 aes_ecb_256()
 
             elif conferindo_chave > 32:
 
-                print("Retire mais caracteres para fechar 32 bytes")
+                print("Retire mais caracteres para fechar 32 bytes. A chave possui {} caracteres".format(len(conferindo_chave)))
                 aes_ecb_256()
 
             else:
@@ -260,12 +270,17 @@ def aes_ecb_256():
             print(conteudo)
 
             try:
+
                 key = raw_input("Digite a chave: ")
                 key = key.decode('hex')
+
             except ValueError:
+
                 print("Tamanho da chave nao e 32 bytes")
                 aes_ecb_256()
+
             except TypeError:
+
                 print("Chave tem que ser em hexadecimal\n")
                 aes_ecb_256()
 
@@ -278,6 +293,7 @@ def aes_ecb_256():
             plaintext_arquivo.close()
 
         else:
+
             print("Arquivo inexistente")
             aes_ecb_256()
 ### AES ECB ###
@@ -301,6 +317,7 @@ def aes_cbc():
 
 def aes_cbc_128():
     print("Bem vindo ao modulo de criptografia com o algoritmo AES no modo CBC 128 bits")
+    # Encrpyt or Decrypt?
     print("O modulo possui duas opcoes:\n1 - Criptografar\n2 - Decritpografar")
     crypt_or_decrypt = int(raw_input(">> ")) 
 

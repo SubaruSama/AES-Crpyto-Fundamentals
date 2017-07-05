@@ -1,10 +1,26 @@
 ﻿# coding = UTF-8
 
+'''
+Chave AES foi criptografada com RSA
+Foi salva em um arquivo
+Entrar o caminho em que a chave do AES esta protegida com RSA
+para descriptografar, entrar com a chave privada do RSA
+e voila, chave do AES esta ai
+'''
+
+
 import os
 import os.path as path
 import pyaes
 import time
-from Crypto.PublicKey import RSA # TODO: Implementar o RSA
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import PKCS1_OAEP
+
+'''
+Gerar um par de chaves RSA protegida por um passphrase
+Criptografar a chave do AES gerado com a chave privada do RSA
+Descritpografar a chave do AES com a chave publica da pessoa que enviou
+'''
 
 
 def hello():
@@ -95,18 +111,41 @@ def aes_ecb_128():
         file_in = open(nome_arquivo + '.txt', 'w+')
         file_in_hex = open(nome_arquivo + '_in_hex' + '.txt', 'w+')
 
-        escolha = raw_input("Deseja gerar uma chave randomicamente? (Y/N): ")
+        escolha = raw_input("Deseja gerar uma chave randomicamente? (AES + key pair RSA) (Y/N): ")
 
         if escolha == 'Y' or escolha == 'y':
 
             key_gerada = createKey(16)
+            # Para o RSA
+            supah_secret_code = str(raw_input("Para gerar um par de chaves para o RSA, precisamos que entre com uma passphrase: "))
+            # Para motivos de nomes de arquivo
+            nome_user = str(raw_input("Por favor, digite o seu nome: "))
+            # Tamanho da chave = 2048 bits recomendado
+            key_pair = RSA.generate(2048)
+            enc_key = key_pair.exportKey(passphrase=supah_secret_code)
+            key_pub = key_pair.publickey().exportKey()
+            key_prv8 = key_pair.exportKey()
+            # Criptografando a chave AES com RSA aqui
+            cipher_RSA = PKCS1_OAEP.new(key_pair.publickey())
+            aes_encrypted_with_RSA = cipher_RSA.encrypt(key_gerada)
+            file_out_aes_encrypted_RSA = open('aes_key_rsa', 'wb')
+            file_out_aes_encrypted_RSA.write(aes_encrypted_with_RSA)
+            file_out_aes_encrypted_RSA.close()
+            # Terminando aqui
+            file_out_pub = open('%s' % nome_user + '.pu', 'wb') # para chave publica
+            file_out_prv8 = open('%s' % nome_user + '.pr', 'wb') # para a chave privada
             print("Chave criada em ascii: {}".format(key_gerada))
             print("Chave criada em hex: {}".format(key_gerada.encode('hex')))
+            print("Chave publica:\n%s" % (key_pub))
             aes_exec = pyaes.AESModeOfOperationECB(key_gerada)
             ciphertext = aes_exec.encrypt(plaintext)
             # Escrever no arquivo o ciphertext
             file_in.write("{}".format(ciphertext))
             file_in_hex.write("{}".format(ciphertext.encode('hex')))
+            file_out_pub.write(key_pub)
+            file_out_prv8.write(key_prv8)
+            file_out_pub.close()
+            file_out_prv8.close()
             file_in.close()
             file_in_hex.close()
 
@@ -217,15 +256,49 @@ def aes_ecb_256():
 
         if escolha == 'Y' or escolha == 'y':
 
+            # key_gerada = createKey(32)
+            # print("Chave criada em ascii: {}".format(key_gerada))
+            # print("Chave criada em hex: {}".format(key_gerada.encode('hex')))
+            # aes_exec = pyaes.AESModeOfOperationECB(key_gerada)
+            # ciphertext = aes_exec.encrypt(plaintext)
+            # # Escrever no arquivo o ciphertext
+            # # file_in.write("{}\n".format(ciphertext.encode('hex')))
+            # file_in.write("{}".format(ciphertext))
+            # file_in_hex.write("{}".format(ciphertext.encode('hex')))
+            # file_in.close()
+            # file_in_hex.close()
+
             key_gerada = createKey(32)
+            # Para o RSA
+            supah_secret_code = str(raw_input("Para gerar um par de chaves para o RSA, precisamos que entre com uma passphrase: "))
+            # Para motivos de nomes de arquivo
+            nome_user = str(raw_input("Por favor, digite o seu nome: "))
+            # Tamanho da chave = 2048 bits recomendado
+            key_pair = RSA.generate(2048)
+            enc_key = key_pair.exportKey(passphrase=supah_secret_code)
+            key_pub = key_pair.publickey().exportKey()
+            key_prv8 = key_pair.exportKey()
+            # Criptografando a chave AES com RSA aqui
+            cipher_RSA = PKCS1_OAEP.new(key_pair.publickey())
+            aes_encrypted_with_RSA = cipher_RSA.encrypt(key_gerada)
+            file_out_aes_encrypted_RSA = open('aes_key_rsa', 'wb')
+            file_out_aes_encrypted_RSA.write(aes_encrypted_with_RSA)
+            file_out_aes_encrypted_RSA.close()
+            # Terminando aqui
+            file_out_pub = open('%s' % nome_user + '.pu', 'wb') # para chave publica
+            file_out_prv8 = open('%s' % nome_user + '.pr', 'wb') # para a chave privada
             print("Chave criada em ascii: {}".format(key_gerada))
             print("Chave criada em hex: {}".format(key_gerada.encode('hex')))
+            print("Chave publica:\n%s" % (key_pub))
             aes_exec = pyaes.AESModeOfOperationECB(key_gerada)
             ciphertext = aes_exec.encrypt(plaintext)
             # Escrever no arquivo o ciphertext
-            # file_in.write("{}\n".format(ciphertext.encode('hex')))
             file_in.write("{}".format(ciphertext))
             file_in_hex.write("{}".format(ciphertext.encode('hex')))
+            file_out_pub.write(key_pub)
+            file_out_prv8.write(key_prv8)
+            file_out_pub.close()
+            file_out_prv8.close()
             file_in.close()
             file_in_hex.close()
 
@@ -366,15 +439,49 @@ def aes_cbc_128():
 
         if escolha == 'Y' or escolha == 'y':
 
+            # key_gerada = createKey(16)
+            # print("Chave criada em ascii: {}".format(key_gerada))
+            # print("Chave criada em hex: {}".format(key_gerada.encode('hex')))
+            # aes_exec = pyaes.AESModeOfOperationCBC(key_gerada, iv = iv_final)
+            # ciphertext = aes_exec.encrypt(plaintext)
+            # # Escrever no arquivo o ciphertext
+            # # file_in.write("{}\n".format(ciphertext.encode('hex')))
+            # file_in.write("{}".format(ciphertext))
+            # file_in_hex.write("{}".format(ciphertext.encode('hex')))
+            # file_in.close()
+            # file_in_hex.close()
+
             key_gerada = createKey(16)
+            # Para o RSA
+            supah_secret_code = str(raw_input("Para gerar um par de chaves para o RSA, precisamos que entre com uma passphrase: "))
+            # Para motivos de nomes de arquivo
+            nome_user = str(raw_input("Por favor, digite o seu nome: "))
+            # Tamanho da chave = 2048 bits recomendado
+            key_pair = RSA.generate(2048)
+            enc_key = key_pair.exportKey(passphrase=supah_secret_code)
+            key_pub = key_pair.publickey().exportKey()
+            key_prv8 = key_pair.exportKey()
+            # Criptografando a chave AES com RSA aqui
+            cipher_RSA = PKCS1_OAEP.new(key_pair.publickey())
+            aes_encrypted_with_RSA = cipher_RSA.encrypt(key_gerada)
+            file_out_aes_encrypted_RSA = open('aes_key_rsa', 'wb')
+            file_out_aes_encrypted_RSA.write(aes_encrypted_with_RSA)
+            file_out_aes_encrypted_RSA.close()
+            # Terminando aqui
+            file_out_pub = open('%s' % nome_user + '.pu', 'wb') # para chave publica
+            file_out_prv8 = open('%s' % nome_user + '.pr', 'wb') # para a chave privada
             print("Chave criada em ascii: {}".format(key_gerada))
             print("Chave criada em hex: {}".format(key_gerada.encode('hex')))
+            print("Chave publica:\n%s" % (key_pub))
             aes_exec = pyaes.AESModeOfOperationCBC(key_gerada, iv = iv_final)
             ciphertext = aes_exec.encrypt(plaintext)
             # Escrever no arquivo o ciphertext
-            # file_in.write("{}\n".format(ciphertext.encode('hex')))
             file_in.write("{}".format(ciphertext))
             file_in_hex.write("{}".format(ciphertext.encode('hex')))
+            file_out_pub.write(key_pub)
+            file_out_prv8.write(key_prv8)
+            file_out_pub.close()
+            file_out_prv8.close()
             file_in.close()
             file_in_hex.close()
 
@@ -494,15 +601,49 @@ def aes_cbc_256():
 
         if escolha == 'Y' or escolha == 'y':
 
+            # key_gerada = createKey(32)
+            # print("Chave criada em ascii: {}".format(key_gerada))
+            # print("Chave criada em hex: {}".format(key_gerada.encode('hex')))
+            # aes_exec = pyaes.AESModeOfOperationCBC(key_gerada, iv = iv_gerado)
+            # ciphertext = aes_exec.encrypt(plaintext)
+            # # Escrever no arquivo o ciphertext
+            # # file_in.write("{}\n".format(ciphertext.encode('hex')))
+            # file_in.write("{}".format(ciphertext))
+            # file_in_hex.write("{}".format(ciphertext.encode('hex')))
+            # file_in.close()
+            # file_in_hex.close()
+
             key_gerada = createKey(32)
+            # Para o RSA
+            supah_secret_code = str(raw_input("Para gerar um par de chaves para o RSA, precisamos que entre com uma passphrase: "))
+            # Para motivos de nomes de arquivo
+            nome_user = str(raw_input("Por favor, digite o seu nome: "))
+            # Tamanho da chave = 2048 bits recomendado
+            key_pair = RSA.generate(2048)
+            enc_key = key_pair.exportKey(passphrase=supah_secret_code)
+            key_pub = key_pair.publickey().exportKey()
+            key_prv8 = key_pair.exportKey()
+            # Criptografando a chave AES com RSA aqui
+            cipher_RSA = PKCS1_OAEP.new(key_pair.publickey())
+            aes_encrypted_with_RSA = cipher_RSA.encrypt(key_gerada)
+            file_out_aes_encrypted_RSA = open('aes_key_rsa', 'wb')
+            file_out_aes_encrypted_RSA.write(aes_encrypted_with_RSA)
+            file_out_aes_encrypted_RSA.close()
+            # Terminando aqui
+            file_out_pub = open('%s' % nome_user + '.pu', 'wb') # para chave publica
+            file_out_prv8 = open('%s' % nome_user + '.pr', 'wb') # para a chave privada
             print("Chave criada em ascii: {}".format(key_gerada))
             print("Chave criada em hex: {}".format(key_gerada.encode('hex')))
+            print("Chave publica:\n%s" % (key_pub))
             aes_exec = pyaes.AESModeOfOperationCBC(key_gerada, iv = iv_gerado)
             ciphertext = aes_exec.encrypt(plaintext)
             # Escrever no arquivo o ciphertext
-            # file_in.write("{}\n".format(ciphertext.encode('hex')))
             file_in.write("{}".format(ciphertext))
             file_in_hex.write("{}".format(ciphertext.encode('hex')))
+            file_out_pub.write(key_pub)
+            file_out_prv8.write(key_prv8)
+            file_out_pub.close()
+            file_out_prv8.close()
             file_in.close()
             file_in_hex.close()
 

@@ -1,3 +1,4 @@
+#!/usr/bin/python
 ﻿# coding = UTF-8
 
 '''
@@ -13,6 +14,7 @@ import os
 import os.path as path
 import pyaes
 import time
+# import argparse
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
 
